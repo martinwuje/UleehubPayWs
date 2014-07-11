@@ -1,0 +1,39 @@
+package ${packageName}.web.actionform;
+
+import com.weboa.system.web.actionform.BaseForm;
+
+/**
+ * Description: this is ${entityName} bean
+ * @author ${author}
+ * @version 1.0 2010-8
+ */
+public class ${entityName}Form extends BaseForm{
+	private Integer id;
+	#foreach( $col in $list )
+	#if(!${col.prikey})
+	//
+    private ${col.javaType} ${col.columnName};
+    #end
+	#end
+	
+	public Integer getId(){
+		return this.id;
+	}
+	
+	public void setId(Integer id){
+		this.id = id;
+	}
+	#foreach( $col in $list )
+	#if(!${col.prikey})
+	
+	public ${col.javaType} get${col.getFirstLetterUpper($col.columnName)}(){
+		return this.${col.columnName};
+	}
+	
+	public void set${col.getFirstLetterUpper($col.columnName)}($col.javaType $col.columnName){
+		this.${col.columnName} = ${col.columnName};
+	}
+	
+	#end
+	#end
+}

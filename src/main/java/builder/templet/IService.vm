@@ -1,0 +1,29 @@
+package ${packageName}.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ${packageName}.entity.${entityName};
+import ${packageName}.repository.${entityName}Repository;
+import com.uleehub.common.service.BaseService;
+
+ /**
+ * <p>Description: this is ${entityName} Service
+ * <p>User: ${author}
+ * <p>Date: ${date}
+ * <p>Version: 1.0
+ */
+ 
+@Service
+public class ${entityName}Service extends BaseService<${entityName}, Long>{
+
+    private static Logger logger = LoggerFactory.getLogger(${entityName}.class);
+    
+    
+	private ${entityName}Repository get${entityName}Repository() {
+        return (${entityName}Repository) baseRepository;
+    }
+}
+

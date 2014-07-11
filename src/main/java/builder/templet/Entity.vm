@@ -1,0 +1,47 @@
+package ${packageName}.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import org.hibernate.annotations.DynamicUpdate;
+import com.uleehub.common.entity.BaseEntity;
+
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import com.uleehub.common.repository.support.annotation.EnableQueryCache;
+${imports}
+
+ /**
+ * <p>Description: this is ${entityName} bean
+ * <p>User: ${author}
+ * <p>Date: ${date}
+ * <p>Version: 1.0
+ */
+@Entity
+@DynamicUpdate
+@Table(name = "${tableName}")
+@EnableQueryCache
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class ${entityName}  extends BaseEntity<Long> {
+
+	#foreach( $col in $list )
+	#if(!${col.prikey})
+	//${col.remark}
+    private ${col.javaType} ${col.columnName};
+    #end
+	#end
+
+	#foreach( $col in $list )
+	#if(!${col.prikey})
+	
+	public ${col.javaType} get${col.getFirstLetterUpper($col.columnName)}() {
+		return this.${col.columnName};
+	}
+	
+	public void set${col.getFirstLetterUpper($col.columnName)}($col.javaType $col.columnName) {
+		this.${col.columnName} = ${col.columnName};
+	}
+	
+	#end
+	#end
+	
+}

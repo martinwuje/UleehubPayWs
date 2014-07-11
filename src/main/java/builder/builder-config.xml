@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<makers>
+	<global>
+		<!-- 模板路径 -->
+		<templetPath>builder.templet</templetPath>
+		<basePath>src/main/java/</basePath>
+		<frames type="struts" version="1.2" description="框架配置">
+			<configFilePath>struts-config.xml</configFilePath>
+			<!-- Spring配置 -->
+			<spring version="1.6" enable="true" group="true">
+				<group>
+					<dao>spring-dao-bean.xml</dao>
+					<service>spring-service-bean.xml</service>
+					<action>spring-action-bean.xml</action>
+				</group>
+			</spring>
+			<!-- 数据库操作层配置 -->
+			<sql type="ibatis" version="1.5" enable="true">
+				<configFilePath>sql-map-config.xml</configFilePath>
+			</sql>
+		</frames>
+	</global>
+	  
+	<maker enable="false" description="测试代码模板">
+		<!-- 创建者 -->
+		<author>mtwu</author>
+		<!-- 包名称 -->
+		<packageName>com.mtwu.webcore.cooperatework</packageName>
+		<!-- 数据表名称 -->
+		<tableName>OA_CAR_DRIVER</tableName>
+		<!-- 数据表别名 -->
+		<tableAliasName>cr</tableAliasName>
+		<!-- 实体名称 -->
+		<entityName></entityName>
+		<!-- 描述 -->
+		<entityDesc>征求意见</entityDesc>
+		<!-- 表关系以及外键设置 -->
+		<relations>
+			<foreignKey table="sd_t" alias="s" field="ns_creatorId" javaType="com.test.templet.Sd" fetch="false"/>
+			<foreignKey table="fd_t" alias="f" field="ns_consultTypeId" javaType="com.test.templet.Fd" fetch="true"/>
+			<!-- 
+				table		: 	外键数据表名称
+				alias		:	外键数据表别名
+				field		:	外键字段(必须属性),如果设置了抓取信息则必须指定javaType属性值
+				javaType 	:	外键实体(如果不需要抓取信息可以省略)
+				fetch		:	设置是否抓取信息(true:抓取 false:不抓取 默认为false)
+				
+				Note :	1. 如果外键表不需要与当前表进行查询联接可以省略table和alias属性,联接字段为field属性指定的值
+						2. 如果不需要抓取信息可以省略javaType属性
+			 -->
+		</relations>
+	</maker>
+	
+	<maker enable="true" description="">
+		<!-- 创建者 -->
+		<author>mtwu</author>
+		<!-- 包名称 -->
+		<packageName>com.uleehub.test</packageName>
+		<!-- 数据表名称 -->
+		<tableName>ss_user</tableName>
+		<!-- 数据表别名 -->
+		<tableAliasName>T</tableAliasName>
+		<!-- 实体名称 -->
+		<entityName>User</entityName>
+	</maker>
+	
+</makers>

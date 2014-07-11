@@ -1,0 +1,99 @@
+package ${packageName}.service.impl;
+
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ${packageName}.model.${entityName};
+import ${packageName}.model.Query${entityName};
+import ${packageName}.dao.${entityName}DAO;
+import ${packageName}.service.${entityName}Service;
+import org.fto.jthink.util.DateTimeHelper;
+import com.dsoft.util.SecurityUtil;
+import com.dsoft.context.exception.SystemException;
+
+/**
+ * Description: this is an accomplished-class of service-interface of ${entityName}
+ * @author ${author}
+ * @version 1.0 2011-3
+ */
+@Service
+public class ${entityName}ServiceImpl implements ${entityName}Service{
+	@Autowired
+	private ${entityName}DAO ${entityName.toLowerCase()}DAO;
+	
+	public List<${entityName}> findPageList(Query${entityName} query${entityName}) throws SystemException {
+		Integer counter = ${entityName.toLowerCase()}DAO.findCount(query${entityName});
+		query${entityName}.setTotalRows(counter);
+		List<${entityName}> list =${entityName.toLowerCase()}DAO.findPageList(query${entityName});
+		return list;
+	}
+    /*
+    public List<${entityName}> findList() throws SystemException {
+    	List<${entityName}> list =${entityName.toLowerCase()}DAO.findList();
+		return list;
+	}
+    */
+    public ${entityName} findById(Integer id)  throws SystemException{
+    	${entityName} ${entityName.toLowerCase()}=${entityName.toLowerCase()}DAO.findById(id);
+		return ${entityName.toLowerCase()};
+	}
+	
+	public void add(${entityName} ${entityName.toLowerCase()}) throws SystemException {
+		${entityName.toLowerCase()}DAO.insert(${entityName.toLowerCase()});
+	}
+	
+	public void update(${entityName} ${entityName.toLowerCase()}) throws SystemException {
+		${entityName.toLowerCase()}DAO.update(${entityName.toLowerCase()});
+	}
+	
+	public boolean save(${entityName} ${entityName.toLowerCase()}Form) throws SystemException {
+		${entityName} ${entityName.toLowerCase()} = null;
+    	if ( ${entityName.toLowerCase()}Form.getId() == null ) {
+    		${entityName.toLowerCase()} = new ${entityName}();
+	    	${entityName.toLowerCase()}.setCreatorId(SecurityUtil.getLoginOperator().getId());
+	    	${entityName.toLowerCase()}.setCreateTime(DateTimeHelper.formatDateTimetoString(
+						DateTimeHelper.getSystemDate(),DateTimeHelper.FMT_yyyyMMddHHmm));
+    	} else {
+    		${entityName.toLowerCase()} =findById(${entityName.toLowerCase()}Form.getId());
+    	}
+    	if(${entityName.toLowerCase()}!=null){
+			#foreach( $col in $list )
+			#if(!${col.prikey})
+			#if(!${col.fetch})
+			${entityName.toLowerCase()}.set${col.getFirstLetterUpper($col.columnName)}(${entityName.toLowerCase()}Form.get${col.getFirstLetterUpper($col.columnName)}());
+			#else
+			//set ${col.columnName} information
+			${entityName.toLowerCase()}.set${col.getFirstLetterUpper($col.columnName)}(new ${col.getFirstLetterUpper($col.columnName)}(${entityName.toLowerCase()}Form.get${col.getFirstLetterUpper($col.columnName)}Id()));
+			#end
+		    #end
+			#end
+			
+			if ( ${entityName.toLowerCase()}.getId() != null && ${entityName.toLowerCase()}.getId() > 0 ) {
+				update(${entityName.toLowerCase()});
+			} else {
+				add(${entityName.toLowerCase()});
+			}
+			return true;
+		}
+		return false;
+	}
+	
+    public void delete(String[] selectedIds) throws SystemException {
+    	Integer len = selectedIds.length;
+    	for ( int i = 0; i < len; i++ ) {
+    		String id=selectedIds[i];
+    		if(StringUtils.isNotBlank(id)){
+    			delete(Integer.parseInt(id));
+    		}
+    	}
+	}
+    public void delete(Integer id) throws SystemException {
+    	${entityName.toLowerCase()}DAO.delete(id);
+	}
+	
+	
+	
+}

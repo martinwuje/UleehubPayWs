@@ -1,0 +1,215 @@
+package ${packageName}.web;
+
+import java.util.List;
+import org.apache.log4j.Logger;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.dsoft.webcore.base.BaseAction;
+import ${packageName}.model.${entityName};
+import ${packageName}.model.Query${entityName};
+import ${packageName}.service.${entityName}Service;
+
+import org.fto.jthink.util.DateTimeHelper;
+import com.dsoft.util.SecurityUtil;
+import com.dsoft.context.exception.SystemException;
+
+${imports}
+
+/**
+ * Description: this is ${entityName} action
+ * @author ${author}
+ * @version 1.0 2011
+ */
+@Controller
+@RequestMapping("/${entityName.toLowerCase()}")
+public class ${entityName}Action extends BaseAction {
+	Logger logger = Logger.getLogger(${entityName}Action.class);
+	@Autowired
+	private ${entityName}Service ${entityName.toLowerCase()}Service;
+	
+	private final String VIEW_MODEL = "${entityName.toLowerCase()}";
+	private final String PAGES_URL="/../";
+	
+	/**
+	 * forward to manage or browse page of ${entityName.toLowerCase()}
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return String
+	 */
+	 @RequestMapping("/browse")
+	public ModelAndView browse(HttpServletRequest request,${entityName} ${entityName.toLowerCase()}Form){
+		Query${entityName} query${entityName} = new Query${entityName}(request, null);
+		 String mark = request.getParameter("mark");
+		 ModelAndView modelAndView=new ModelAndView();
+		try {
+			List<${entityName}> ${entityName.toLowerCase()}s = ${entityName.toLowerCase()}Service.findPageList(query${entityName});
+	   		modelAndView.addObject("${entityName.toLowerCase()}s", ${entityName.toLowerCase()}s);
+	   		modelAndView.addObject("${entityName.toLowerCase()}Form", ${entityName.toLowerCase()}Form);
+	   		if ( mark != null && mark.equals("manage") ) {
+	    		modelAndView.setViewName(PAGES_URL+"manage_"+VIEW_MODEL);
+	    	}else{
+	    		modelAndView.setViewName(PAGES_URL+"list_"+VIEW_MODEL);
+	    	}
+		 } catch (Exception e) {
+			logger.error("error ->", e);
+			throw new SystemException(e);
+		}
+		setToken(request);
+        return modelAndView;
+	}
+	
+	/**
+	 * forward to detail page of ${entityName.toLowerCase()}
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return String
+	 */
+	 @RequestMapping("/detail")
+	public ModelAndView detail(HttpServletRequest request, HttpServletResponse response,Integer id){
+		 ModelAndView modelAndView=new ModelAndView();
+	    try {
+		    if ( id != null && !id.equals(0) ) {
+			    ${entityName} ${entityName.toLowerCase()} = ${entityName.toLowerCase()}Service.findById(id);
+		    	if(${entityName.toLowerCase()}==null){
+		    		modelAndView.setViewName("showError");
+		    		return modelAndView;
+		    	}
+	    		modelAndView.addObject("${entityName.toLowerCase()}Form", ${entityName.toLowerCase()});
+	    		modelAndView.setViewName(PAGES_URL+"detail_"+VIEW_MODEL);
+		    }		
+		 } catch (Exception e) {
+			logger.error("error ->", e);
+			throw new SystemException(e);
+		}
+		setToken(request);
+		return modelAndView;
+	}
+	
+	/**
+	 * forward to add page of ${entityName.toLowerCase()}
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return String
+	 */
+	 @RequestMapping("/showAdd")
+	public ModelAndView showAdd(HttpServletRequest request, ${entityName} ${entityName.toLowerCase()}Form){
+		ModelAndView modelAndView=new ModelAndView();
+		try {
+			modelAndView.addObject("${entityName.toLowerCase()}Form", ${entityName.toLowerCase()}Form);
+			
+		 } catch (Exception e) {
+			logger.error("error ->", e);
+			throw new SystemException(e);
+		}
+		
+		modelAndView.setViewName(PAGES_URL+"add_"+VIEW_MODEL);
+		setToken(request);
+		return modelAndView;
+	}
+	
+	/**
+	 * forward to update page of ${entityName.toLowerCase()}
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return String
+	 */
+	 @RequestMapping("/showEdit")
+	public ModelAndView showEdit(HttpServletRequest request,Integer id){
+		ModelAndView modelAndView=new ModelAndView();
+	    ${entityName} ${entityName.toLowerCase()}=null;
+		try {
+		    if ( id != null && !id.equals(0) ) {
+		    	 ${entityName.toLowerCase()} = ${entityName.toLowerCase()}Service.findById(id);
+		    	if(${entityName.toLowerCase()}==null){
+		    		${entityName.toLowerCase()}=new ${entityName}();
+		    		sendOpMsg(request,"FAILURE",null);
+		    	}
+		    }else{
+		    	sendOpMsg(request,"FAILURE",null);
+		    }
+		    modelAndView.addObject("${entityName.toLowerCase()}Form", ${entityName.toLowerCase()});
+		 } catch (Exception e) {
+			logger.error("error ->", e);
+			throw new SystemException(e);
+		}
+		modelAndView.setViewName(PAGES_URL+"edit_"+VIEW_MODEL);
+		setToken(request);
+		return modelAndView;
+	}
+	
+	/**
+	 * add or update the ${entityName.toLowerCase()} information
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return String
+	 */
+	 @RequestMapping("/save")
+	public ModelAndView save(HttpServletRequest request, HttpServletResponse response,${entityName} ${entityName.toLowerCase()}Form){
+		ModelAndView modelAndView=new ModelAndView();
+		boolean isSuccess = false;
+	    try {
+	    	if(validToken(request)){
+		    	isSuccess =${entityName.toLowerCase()}Service.save(${entityName.toLowerCase()}Form);
+		    	if(isSuccess){
+		    		sendOpMsg(request,"SUCCESS",null);
+		    	}else{
+		    		sendOpMsg(request,"FAILURE",null);
+		    	}
+			}
+			modelAndView.addObject("${entityName.toLowerCase()}Form", ${entityName.toLowerCase()}Form);
+		 } catch (Exception e) {
+			logger.error("error ->", e);
+			throw new SystemException(e);
+		}
+	    return browse(request,${entityName.toLowerCase()}Form);
+	}
+	
+	
+	/**
+	 * delete one or more ${entityName.toLowerCase()} informations
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return String
+	 */
+	 @RequestMapping("/delete")
+	public ModelAndView delete(HttpServletRequest request,${entityName} ${entityName.toLowerCase()}Form,String[] selectedIds){
+	    try {
+	    	if(validToken(request)){
+			    if ( selectedIds != null && selectedIds.length > 0 ) {
+			    	${entityName.toLowerCase()}Service.delete(selectedIds);
+			    	request.setAttribute("reqResult", 1);
+			    	sendOpMsg(request,"SUCCESS",null);
+			    }	
+			 }	
+		 } catch (Exception e) {
+			logger.error("error ->", e);
+			throw new SystemException(e);
+		}	    	
+	    return browse(request,${entityName.toLowerCase()}Form);
+	}
+	
+	 /**
+	 * container
+	 * @return ModelAndView
+	 */
+	 @RequestMapping("/container")
+	 public ModelAndView container(){
+	 	ModelAndView modelAndView=new ModelAndView();
+	 	modelAndView.setViewName(PAGES_URL+"container_"+VIEW_MODEL);
+		return modelAndView;
+	 }
+	
+}

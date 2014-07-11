@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+	default-lazy-init="true">
+
+	<description>Apache CXF的 SOAP Web Service配置</description>
+	<bean id="SAAJInInterceptor" class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+	<bean id="WSS4JInInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">  
+        <constructor-arg>  
+            <map>  
+                <entry key="action" value="UsernameToken" />  
+                <entry key="passwordType" value="PasswordText" />  
+                <entry key="passwordCallbackClass"  
+                    value="com.uleehub.webservice.soap.ServerPasswordCallback" />  
+            </map>  
+        </constructor-arg>  
+    </bean>  
+	<!-- jax-ws endpoint定义  -->
+	<jaxws:endpoint address="/uleepay/aliPayService">
+		<jaxws:implementor ref="aliPayService" />
+		<jaxws:inInterceptors>
+			<ref bean="SAAJInInterceptor" />
+			<ref bean="WSS4JInInterceptor" />
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+	<jaxws:endpoint address="/uleepay/aliRefundService">
+		<jaxws:implementor ref="aliRefundService" />
+		<jaxws:inInterceptors>
+			<ref bean="SAAJInInterceptor" />
+			<ref bean="WSS4JInInterceptor" />
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+	<jaxws:endpoint address="/uleepay/icbcB2cPayService">
+		<jaxws:implementor ref="icbcB2cPayService" />
+		<jaxws:inInterceptors>
+			<ref bean="SAAJInInterceptor" />
+			<ref bean="WSS4JInInterceptor" />
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+	<jaxws:endpoint address="/uleepay/IcbcB2cPayStatusService">
+		<jaxws:implementor ref="IcbcB2cPayStatusService" />
+		<jaxws:inInterceptors>
+			<ref bean="SAAJInInterceptor" />
+			<ref bean="WSS4JInInterceptor" />
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+	<!-- WebService的实现Bean定义 -->
+	<bean id="aliPayService" class="com.uleehub.webservice.soap.pay.AliPayServiceImpl" />
+	<bean id="aliRefundService" class="com.uleehub.webservice.soap.pay.AliRefundServiceImpl" />
+	<bean id="icbcB2cPayService" class="com.uleehub.webservice.soap.pay.IcbcB2cPayServiceImpl" />
+	<bean id="IcbcB2cPayStatusService" class="com.uleehub.webservice.soap.pay.IcbcB2cPayStatusServiceImpl" />
+</beans>

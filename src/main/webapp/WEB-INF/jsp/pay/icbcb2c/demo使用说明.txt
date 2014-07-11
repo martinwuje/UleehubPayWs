@@ -1,0 +1,3 @@
+1.demo的最低运行jdk版本为1.4。
+2.login.jsp为首页面，loginSign.jsp对如何调用icbcB2CApi.jar中的方法进行B2C支付进行了演示。
+3.Newb2c_pay_Mer.jsp对如何调用icbcB2CApi.jar中的方法进行B2C支付后，接受到银行发送的通知后，如何解密验签进行了演示。

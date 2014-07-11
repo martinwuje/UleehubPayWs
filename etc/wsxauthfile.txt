@@ -1,0 +1,1 @@
+http://tomcatws:123456@localhost:8080/WebServicesExample/webSecurity?wsdl

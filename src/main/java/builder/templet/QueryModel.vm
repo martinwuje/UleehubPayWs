@@ -1,0 +1,18 @@
+package ${packageName}.model;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.dsoft.webcore.base.BasePageQuery;
+
+/**
+ * Description: this is query bean of ${entityName}
+ * @author ${author}
+ * @version 1.0 2011-3
+ */
+public class Query${entityName} extends BasePageQuery {
+	public Query${entityName}(HttpServletRequest request, String tableId) {
+		super(request, tableId);
+	}
+	
+	
+}

@@ -1,0 +1,36 @@
+//以下是利用icbcB2CApi.jar生成表单数据的全过程 
+
+
+List l=new ArrayList();
+
+//1.0.0.3 1.0.0.8接口只支持单笔，所以无需使用循环。其他接口如果不涉及多比订单无需循环，如果有多订单，请循环组织订单数据，然后添加到List对象中
+//循环组织订单数据 j值等于订单数量
+for(int i=1;i<j+1;i++ ) {
+OrderInfo order=new OrderInfo();//实例订单对象
+order.setAmount(Amount);//订单金额
+order.setCarriageAmt(CarriageAmt);//已含运费金额
+order.setGoodsID(GoodsID);//商品编号 
+order.setGoodsName(GoodsName);//商品名称  
+order.setGoodsNum(GoodsNum);//商品数量  
+order.setInstallmentTimes(InstallmentTimes);//分期付款期数 1.0.0.3 1.0.0.8接口无需上送
+order.setOrderid(Orderid);//订单号  
+l.add(order);
+}
+//循环结束
+
+TranData t=new TranData();//实例tranData对象
+t.setOrderDate(OrderDate);//交易日期时间 
+t.setGoodsType(GoodsType);//虚拟商品or实物商品标志位 1.0.0.3 1.0.0.8接口无需上送
+t.setMerCustomID(MerCustomID);//买家用户号 1.0.0.3 1.0.0.8接口无需上送
+t.setMerCustomPhone(MerCustomPhone);//买家联系电话 1.0.0.3 1.0.0.8接口无需上送
+t.setGoodsAddress(GoodsAddress);//收货地址 1.0.0.3 1.0.0.8接口无需上送
+t.setInterfaceVersion(InterfaceVersion);//接口版本号
+t.setHangSupportFlag(HangSupportFlag);//多渠道支付开关标志 1.0.0.3 1.0.0.8 1.0.0.11 接口无需上送
+t.setHangTimeInterval(HangTimeInterval);//多渠道支付订单有效期 1.0.0.3 1.0.0.8 1.0.0.11接口无需上送
+t.setMerCustomIp(IP);//客户端IP 1.0.0.3 1.0.0.8接口无需上送
+t.setOrderInfoVector(l);//将订单信息加到tranData对象中
+
+FormData fd=pay.createFormData("d:/b2c.xml",t);//调用CreateFormData方法，生成formData中的表单数据
+MerCert=fd.getMerCert();//生成公钥 
+MerSignMsg=fd.getMerSignMsg();//生成密文 
+TranData=fd.getTranData();//生成明文 

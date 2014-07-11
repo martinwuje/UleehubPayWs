@@ -1,0 +1,15 @@
+package ${packageName}.repository;
+
+import ${packageName}.entity.${entityName};
+import com.uleehub.common.repository.BaseRepository;
+
+ /**
+ * <p>Description: this is ${entityName} Repository
+ * <p>User: ${author}
+ * <p>Date: ${date}
+ * <p>Version: 1.0
+ */
+
+public interface ${entityName}Repository  extends BaseRepository<${entityName}, Long>{
+	
+}
